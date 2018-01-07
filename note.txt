@@ -1,0 +1,106 @@
+try
+breaking into smaller sentence for each labeling
+pretrain with wikipedia vector
+
+
+[useful commands]
+cat train_comments_skipgram_1_1_1.vec  | grep clothed
+cat parameter_search.vec | grep clothed
+cat train_comments_skipgram_1_1_2.vec | awk -F " " '{print $1}' | sort > train_comments_skipgram_1_1_2_s.vec
+
+
+cat *.tsv | grep -v "raw_comment" | awk -F "\t" '{print $2}' > comments.txt
+sh ../data_cleaning.sh comments.txt > clean_comments.txt
+shuf clean_comments.txt > shuf_clean_comments.txt
+
+cd wiki_comments
+echo "" > wiki_clean_comments.txt
+cat ../input/clean_comments.txt >> wiki_clean_comments.txt
+cat comments_article_2015/clean_comments.txt >> wiki_clean_comments.txt
+cat comments_article_2014/clean_comments.txt >> wiki_clean_comments.txt
+cat comments_article_2013/clean_comments.txt >> wiki_clean_comments.txt
+cat comments_article_2012/clean_comments.txt >> wiki_clean_comments.txt
+cat comments_article_2011/clean_comments.txt >> wiki_clean_comments.txt
+cat comments_article_2010/clean_comments.txt >> wiki_clean_comments.txt
+cat comments_article_2009/clean_comments.txt >> wiki_clean_comments.txt
+cat comments_article_2008/clean_comments.txt >> wiki_clean_comments.txt
+cat comments_article_2007/clean_comments.txt >> wiki_clean_comments.txt
+#cat comments_article_2006/clean_comments.txt >> wiki_clean_comments.txt
+cat comments_article_2005/clean_comments.txt >> wiki_clean_comments.txt
+cat comments_article_2004/clean_comments.txt >> wiki_clean_comments.txt
+cat comments_article_2003/clean_comments.txt >> wiki_clean_comments.txt
+cat comments_article_2002/clean_comments.txt >> wiki_clean_comments.txt
+cat comments_article_2001/clean_comments.txt >> wiki_clean_comments.txt
+
+shuf wiki_clean_comments.txt > shuf_wiki_clean_comments.txt
+
+~/fb_research/fasttext/fastText-0.1.0/fasttext skipgram -input shuf_wiki_clean_comments.txt -output inputtest_article_comments -minn 2 -maxn 5 -wordNgrams 2 -epoch 1 -dim 100
+~/fb_research/fasttext/fastText-0.1.0/fasttext skipgram -input shuf_wiki_clean_comments.txt -output inputtest_article_comments_dim200 -minn 2 -maxn 5 -wordNgrams 2 -epoch 1 -dim 200
+
+./fasttext skipgram -input "${DATADIR}"/fil9 -output "${RESULTDIR}"/fil9 -lr 0.025 -dim 100 \
+  -ws 5 -epoch 1 -minCount 5 -neg 5 -loss ns -bucket 2000000 \
+  -minn 3 -maxn 6 -thread 4 -t 1e-4 -lrUpdateRate 100
+
+
+This is a message letting you know that one or more of your recent
+Please refrain from making unconstructive edits to Wikipedia
+You may be blocked from editing without further warning
+Please stop your disruptive editing
+
+
+~/fb_research/fasttext/fastText-0.1.0/fasttext skipgram -input comments_14_15.txt -output article_comments_14_15 -minn 2 -maxn 5 -wordNgrams 2 -epoch 1
+
+
+~/fb_research/fasttext/fastText-0.1.0/fasttext skipgram -input comments_14_15.txt -output article_comments_14_15 -minn 2 -maxn 5 -wordNgrams 2 -epoch 1 -dim 150
+
+try combine with test + train
+
+
+[wiki1415, 100 dim]
+~/fb_research/fasttext/fastText-0.1.0/fasttext skipgram -input comments_14_15.txt -output article_comments_14_15 -minn 2 -maxn 5 -wordNgrams 2 -epoch 1
+Read 212M words
+Number of words:  299428
+Number of labels: 0
+Progress: 100.0%  words/sec/thread: 66929  lr: 0.000000  loss: 1.537563  eta: 0h0m 
+
+parameter search toxic
+0.186773452042 {'maxn': 5, 'neg': 0, 'pretrainedVectors': 'wiki_comments/article_comments_15.vec', 'epoch': 1, 'minn': 2, 'lr': 0.0001, 'dim': 100, 'wordNgrams': 2}
+0.190418459539 {'maxn': 5, 'neg': 0, 'pretrainedVectors': 'wiki_comments/article_comments_14_15.vec', 'epoch': 1, 'minn': 2, 'lr': 0.0001, 'dim': 100, 'wordNgrams': 2}
+
+[wiki1415 150 dim]
+~/fb_research/fasttext/fastText-0.1.0/fasttext skipgram -input comments_14_15.txt -output article_comments_14_15 -minn 2 -maxn 5 -wordNgrams 2 -epoch 1 -dim 150
+Read 14M words
+Read 212M words
+Number of words:  299428
+Number of labels: 0
+Progress: 100.0%  words/sec/thread: 38829  lr: 0.000000  loss: 1.525538  eta: 0h0m 
+
+parameter search toxic
+0.190639457728 {'maxn': 5, 'neg': 0, 'pretrainedVectors': 'wiki_comments/article_comments_14_15.vec', 'epoch': 1, 'minn': 2, 'lr': 0.0001, 'dim': 150, 'wordNgrams': 2}
+0.189927710593 {'maxn': 5, 'neg': 5, 'pretrainedVectors': 'wiki_comments/article_comments_14_15.vec', 'epoch': 1, 'minn': 2, 'lr': 0.0001, 'dim': 150, 'wordNgrams': 2}
+
+
+[train_test_wiki1415 100 dim]
+~/fb_research/fasttext/fastText-0.1.0/fasttext skipgram -input shuf_wiki_clean_comments.txt -output inputtest_article_comments_1415 -minn 2 -maxn 5 -wordNgrams 2 -epoch 1 -dim 100
+Read 239M words
+Number of words:  254665
+Number of labels: 0
+Progress: 100.0%  words/sec/thread: 62980  lr: 0.000000  loss: 1.383445  eta: 0h0m
+
+0.186091916948 {'maxn': 5, 'neg': 0, 'pretrainedVectors': 'wiki_comments/inputtest_article_comments_1415.vec', 'epoch': 1, 'minn': 2, 'lr': 0.0001, 'dim': 100, 'wordNgrams': 2}
+
+[train_test_wiki1415 200 dim]
+~/fb_research/fasttext/fastText-0.1.0/fasttext skipgram -input shuf_wiki_clean_comments.txt -output inputtest_article_comments_1415_dim200 -minn 2 -maxn 5 -wordNgrams 2 -epoch 1 -dim 200
+Read 239M words
+Number of words:  254665
+Number of labels: 0
+Progress: 100.0%  words/sec/thread: 39663  lr: 0.000000  loss: 1.502989  eta: 0h0m
+
+0.186455791146 {'maxn': 5, 'neg': 0, 'pretrainedVectors': 'wiki_comments/inputtest_article_comments_1415_dim200.vec', 'epoch': 1, 'minn': 2, 'lr': 0.0001, 'dim': 200, 'wordNgrams': 2}
+In [86]:
+
+
+parameter search toxic
+0.187262325485 {'maxn': 5, 'lr': 0.0001, 'epoch': 1, 'minn': 2, 'dim': 100, 'wordNgrams': 2, 'pretrainedVectors': 'wiki_comments/inputtest_article_comments_nosurf.vec', 'neg': 0}
+0.187218683264 {'maxn': 5, 'lr': 0.0001, 'epoch': 1, 'minn': 2, 'dim': 100, 'wordNgrams': 2, 'pretrainedVectors': 'wiki_comments/inputtest_article_comments.vec', 'neg': 0}
+0.187513581979 {'maxn': 5, 'lr': 0.0001, 'epoch': 1, 'minn': 2, 'dim': 200, 'wordNgrams': 2, 'pretrainedVectors': 'wiki_comments/inputtest_article_comments_nosurf_dim200.vec', 'neg': 0}
