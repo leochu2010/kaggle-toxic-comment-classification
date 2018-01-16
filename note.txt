@@ -1,3 +1,8 @@
+try lstm early stop
+try xgb include memberid
+
+
+
 try
 breaking into smaller sentence for each labeling
 pretrain with wikipedia vector
