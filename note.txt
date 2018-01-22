@@ -37,6 +37,23 @@ cat comments_article_2003/clean_comments.txt >> wiki_clean_comments.txt
 cat comments_article_2002/clean_comments.txt >> wiki_clean_comments.txt
 cat comments_article_2001/clean_comments.txt >> wiki_clean_comments.txt
 
+cat shuf_clean_toxic_youtube_comments.txt > wiki_youtube_toxic_clean_comments.txt
+cat comments_article_2015/clean_comments.txt >> wiki_youtube_toxic_clean_comments.txt
+cat comments_article_2014/clean_comments.txt >> wiki_youtube_toxic_clean_comments.txt
+cat comments_article_2013/clean_comments.txt >> wiki_youtube_toxic_clean_comments.txt
+cat comments_article_2012/clean_comments.txt >> wiki_youtube_toxic_clean_comments.txt
+cat comments_article_2011/clean_comments.txt >> wiki_youtube_toxic_clean_comments.txt
+cat comments_article_2010/clean_comments.txt >> wiki_youtube_toxic_clean_comments.txt
+cat comments_article_2009/clean_comments.txt >> wiki_youtube_toxic_clean_comments.txt
+cat comments_article_2008/clean_comments.txt >> wiki_youtube_toxic_clean_comments.txt
+cat comments_article_2007/clean_comments.txt >> wiki_youtube_toxic_clean_comments.txt
+cat comments_article_2005/clean_comments.txt >> wiki_youtube_toxic_clean_comments.txt
+cat comments_article_2004/clean_comments.txt >> wiki_youtube_toxic_clean_comments.txt
+cat comments_article_2003/clean_comments.txt >> wiki_youtube_toxic_clean_comments.txt
+cat comments_article_2002/clean_comments.txt >> wiki_youtube_toxic_clean_comments.txt
+cat comments_article_2001/clean_comments.txt >> wiki_youtube_toxic_clean_comments.txt
+
+
 shuf wiki_clean_comments.txt > shuf_wiki_clean_comments.txt
 
 ~/fb_research/fasttext/fastText-0.1.0/fasttext skipgram -input shuf_wiki_clean_comments.txt -output inputtest_article_comments -minn 2 -maxn 5 -wordNgrams 2 -epoch 1 -dim 100
@@ -109,3 +126,11 @@ parameter search toxic
 0.187262325485 {'maxn': 5, 'lr': 0.0001, 'epoch': 1, 'minn': 2, 'dim': 100, 'wordNgrams': 2, 'pretrainedVectors': 'wiki_comments/inputtest_article_comments_nosurf.vec', 'neg': 0}
 0.187218683264 {'maxn': 5, 'lr': 0.0001, 'epoch': 1, 'minn': 2, 'dim': 100, 'wordNgrams': 2, 'pretrainedVectors': 'wiki_comments/inputtest_article_comments.vec', 'neg': 0}
 0.187513581979 {'maxn': 5, 'lr': 0.0001, 'epoch': 1, 'minn': 2, 'dim': 200, 'wordNgrams': 2, 'pretrainedVectors': 'wiki_comments/inputtest_article_comments_nosurf_dim200.vec', 'neg': 0}
+
+~/fb_research/fasttext/fastText-0.1.0/fasttext skipgram -input wiki_youtube_toxic_clean_comments.txt -output wiki_youtube_toxic_dim100_epoch5 -minn 2 -maxn 5 -wordNgrams 2 -epoch 5 -dim 100
+Read 283M words
+Number of words:  299881
+Number of labels: 0
+Progress: 100.0%  words/sec/thread: 68910  lr: 0.000000  loss: 0.509326  eta: 0h0m 
+
+
